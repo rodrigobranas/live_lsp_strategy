@@ -1,4 +1,6 @@
+import Average from "./Average";
 import AverageRepository from "./AverageRepository";
+import GradeRepository from "./GradeRepository";
 
 export default class GetAverage {
 
@@ -6,13 +8,13 @@ export default class GetAverage {
 	}
 
 	async execute (studentId: number): Promise<Output> {
-		const average = await this.averageRepository.getByStudentId(studentId);
+		const average = await this.averageRepository.getAverageByStudentId(studentId);
 		return {
-			average: average.value
-		}
+			value: average.value
+		};
 	}
 }
 
 type Output = {
-	average: number
+	value: number
 }

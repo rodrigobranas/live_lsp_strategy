@@ -20,32 +20,58 @@ test("Deve calcular a média de um aluno com notas", async function () {
 	await databaseConnection.close();
 });
 
-test("Deve calcular a média de um aluno sem notas", async function () {
+test("Deve calcular a média de um aluno com média entre 5.75 e 6 que deverá ser arredondada para 6", async function () {
 	const databaseConnection = new PgPromiseAdapter();
 	const gradeRepository = new GradeRepositoryDatabase(databaseConnection);
 	const averageRepository = new AverageRepositoryDatabase(databaseConnection);
-	const averageCalculator = new AverageCalculatorD();
+	const averageCalculator = new AverageCalculatorB();
 	const calculateAverage = new CalculateAverage(gradeRepository, averageRepository, averageCalculator);
 	const studentId = 2410002;
 	await averageRepository.deleteAverageByStudentId(studentId);
 	await calculateAverage.execute(studentId);
 	const getAverage = new GetAverage(averageRepository);
 	const output = await getAverage.execute(studentId);
-	// uma expectativa foi criada, que é, se a média de um aluno sem notas for calculada ela deve ser ZERO
-	expect(output.value).toBe(0);
-	await averageRepository.deleteAverageByStudentId(studentId);
+	expect(output.value).toBe(6);
 	await databaseConnection.close();
 });
 
-test("Deve calcular a média de um aluno com notas acima de 10", async function () {
+test("Deve calcular a média de um aluno sem notas", async function () {
+	const databaseConnection = new PgPromiseAdapter();
+	const gradeRepository = new GradeRepositoryDatabase(databaseConnection);
+	const averageRepository = new AverageRepositoryDatabase(databaseConnection);
+	const averageCalculator = new AverageCalculatorB();
+	const calculateAverage = new CalculateAverage(gradeRepository, averageRepository, averageCalculator);
+	const studentId = 2410003;
+	await averageRepository.deleteAverageByStudentId(studentId);
+	await calculateAverage.execute(studentId);
+	const getAverage = new GetAverage(averageRepository);
+	const output = await getAverage.execute(studentId);
+	expect(output.value).toBe(0);
+	await databaseConnection.close();
+});
+
+test("Deve calcular a média de um aluno com uma nota muito baixa, desconsiderando a nota mais alta e a nota mais baixa", async function () {
+	const databaseConnection = new PgPromiseAdapter();
+	const gradeRepository = new GradeRepositoryDatabase(databaseConnection);
+	const averageRepository = new AverageRepositoryDatabase(databaseConnection);
+	const averageCalculator = new AverageCalculatorC();
+	const calculateAverage = new CalculateAverage(gradeRepository, averageRepository, averageCalculator);
+	const studentId = 2410004;
+	await averageRepository.deleteAverageByStudentId(studentId);
+	await calculateAverage.execute(studentId);
+	const getAverage = new GetAverage(averageRepository);
+	const output = await getAverage.execute(studentId);
+	expect(output.value).toBe(7.5);
+	await databaseConnection.close();
+});
+
+test("Deve calcular a média de um aluno com nota maior que 10", async function () {
 	const databaseConnection = new PgPromiseAdapter();
 	const gradeRepository = new GradeRepositoryDatabase(databaseConnection);
 	const averageRepository = new AverageRepositoryDatabase(databaseConnection);
 	const averageCalculator = new AverageCalculatorA();
 	const calculateAverage = new CalculateAverage(gradeRepository, averageRepository, averageCalculator);
-	const studentId = 2410003;
+	const studentId = 2410005;
 	await averageRepository.deleteAverageByStudentId(studentId);
-	// uma expectativa foi criada, as notas não podem ser maiores que 10
 	await expect(() => calculateAverage.execute(studentId)).rejects.toThrow(new Error("Invalid grade"));
-	await databaseConnection.close();
 });

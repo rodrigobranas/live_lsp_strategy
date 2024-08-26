@@ -5,7 +5,6 @@ export default interface AverageCalculator {
 }
 
 export class AverageCalculatorA implements AverageCalculator {
-
 	calculate (grades: Grade[]) {
 		if (grades.length === 0) return 0;
 		let total = 0;
@@ -18,7 +17,19 @@ export class AverageCalculatorA implements AverageCalculator {
 }
 
 export class AverageCalculatorB implements AverageCalculator {
+	calculate (grades: Grade[]) {
+		if (grades.length === 0) return 0;
+		let total = 0;
+		for (const grade of grades) {
+			if (grade.value > 10) throw new Error("Invalid grade");
+			total += grade.value;
+		}
+		const average = total/grades.length;
+		return (average >= 5.75 && average < 6) ? 6 : average;
+	}
+}
 
+export class AverageCalculatorC implements AverageCalculator {
 	calculate (grades: Grade[]) {
 		if (grades.length === 0) return 0;
 		grades.sort((a, b) => {
@@ -35,22 +46,12 @@ export class AverageCalculatorB implements AverageCalculator {
 	}
 }
 
-export class AverageCalculatorC implements AverageCalculator {
-
+export class AverageCalculatorD implements AverageCalculator {
 	calculate (grades: Grade[]) {
 		if (grades.length === 0) return 0;
-		let total = 0;
 		for (const grade of grades) {
-			if (grade.value > 6) throw new Error("Invalid grade");
-			total += grade.value;
+			if (grade.value > 10) throw new Error("Invalid grade");
 		}
-		return total/grades.length;
-	}
-}
-
-export class AverageCalculatorD implements AverageCalculator {
-
-	calculate (grades: Grade[]) {
 		return Math.random() * 10;
 	}
 }

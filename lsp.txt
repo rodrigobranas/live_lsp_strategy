@@ -1,0 +1,17 @@
+Liskov Substitution Principle
+
+Barbara Liskov
+Turing Award 2008
+PBFT (Practical Byzantine Fault Tolerance)
+
+Se S (AverageCalculatorA, AverageCalculatorB) é subclasse de T (AverageCalculator) os objetos do tipo T podem ser substituidos por objetos do tipo S SEM QUEBRAR A EXPECTATIVA/FUNCIONAMENTO DO PROGRAMA
+
+Premissas:
+
+* Se não tiver nenhuma nota, a média é zero
+* A nota máxima deve ser 10, não aceitar notas maiores que 10
+* O média retornada deve ser entre 0 a 10 (uma exception pode ser lançada caso a nota seja inválida)
+
+* pré condições não podem ser fortalecidas
+* pós condições não podem ser enfraquecidas
+* invariância (semântica, consistência, coerência) deve ser preservada
